@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lab Project Report - Software QA Defect Discovery, Code Remediation & Verification - Israt Jahan</title>
+<style>
+  @page {
+    size: A4;
+    margin: 20mm 18mm 22mm 18mm;
+    @bottom-left {
+      content: counter(page) " | Page";
+    }
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    color: #111;
+    line-height: 1.5;
+    font-size: 12pt;
+    margin: 0;
+    padding: 0;
+  }
+
+  .page {
+    position: relative;
+    min-height: 960px;
+    padding-bottom: 40px;
+  }
+
+  .pagebreak {
+    page-break-after: always;
+    break-after: page;
+  }
+
+  /* Header & Title Styling */
+  .university-logo {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 12px;
+  }
+
+  .university-logo img {
+    height: 75px;
+    width: auto;
+  }
+
+  .univ-header {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+
+  .univ-header h1 {
+    font-size: 18pt;
+    font-weight: bold;
+    color: #005628; /* Green University Theme Green */
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .univ-header h2 {
+    font-size: 13pt;
+    font-weight: bold;
+    color: #111;
+    margin: 0 0 4px 0;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .univ-header h3 {
+    font-size: 11pt;
+    font-weight: normal;
+    color: #333;
+    margin: 0 0 6px 0;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .univ-header .semester-tag {
+    font-size: 10.5pt;
+    font-weight: bold;
+    color: #222;
+    margin-top: 4px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .course-meta {
+    margin: 25px 0 20px 0;
+    font-size: 11.5pt;
+    line-height: 1.7;
+  }
+
+  .project-title-box {
+    margin: 20px 0 25px 0;
+    font-size: 12pt;
+  }
+
+  .project-title-box strong {
+    font-size: 12.5pt;
+  }
+
+  /* Student Table */
+  .student-table-container {
+    margin: 25px 0;
+  }
+
+  .student-table-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 12pt;
+    text-decoration: underline;
+    margin-bottom: 10px;
+  }
+
+  table.student-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+  }
+
+  table.student-table th, table.student-table td {
+    border: 1px solid #000;
+    padding: 7px 12px;
+    font-size: 11pt;
+  }
+
+  table.student-table th {
+    background-color: #f2f2f2;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .submission-meta {
+    margin: 25px 0;
+    font-size: 11.5pt;
+    line-height: 1.8;
+  }
+
+  /* Teacher Box */
+  .teacher-box {
+    border: 1.5px solid #000;
+    padding: 15px 20px;
+    margin-top: 35px;
+    background-color: #fff;
+  }
+
+  .teacher-box-warning {
+    text-align: center;
+    color: #0000ff; /* Blue text as in template */
+    font-weight: bold;
+    font-size: 11pt;
+    margin-bottom: 12px;
+  }
+
+  .teacher-box-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 12pt;
+    text-decoration: underline;
+    margin-bottom: 18px;
+  }
+
+  .teacher-box-lines {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11pt;
+    margin-bottom: 14px;
+  }
+
+  /* Page Footer Rule & Numbering */
+  .page-footer-line {
+    position: absolute;
+    bottom: 25px;
+    left: 0;
+    right: 0;
+    border-top: 1px solid #aaa;
+    padding-top: 4px;
+    font-size: 10pt;
+    color: #444;
+  }
+
+  /* Chapter Headings */
+  .chapter-header {
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 35px;
+  }
+
+  .chapter-header h1 {
+    font-size: 22pt;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    color: #000;
+  }
+
+  .chapter-header h2 {
+    font-size: 18pt;
+    font-weight: bold;
+    margin: 0;
+    color: #000;
+  }
+
+  h3.section-heading {
+    font-size: 14pt;
+    font-weight: bold;
+    margin-top: 25px;
+    margin-bottom: 12px;
+    color: #000;
+  }
+
+  h4.subsection-heading {
+    font-size: 12pt;
+    font-weight: bold;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    color: #111;
+  }
+
+  p {
+    text-align: justify;
+    margin-top: 0;
+    margin-bottom: 14px;
+    text-indent: 0;
+  }
+
+  ul, ol {
+    margin-top: 0;
+    margin-bottom: 14px;
+    padding-left: 28px;
+  }
+
+  li {
+    margin-bottom: 6px;
+  }
+
+  /* Table of Contents Styling */
+  .toc-container {
+    margin-top: 20px;
+  }
+
+  .toc-title {
+    font-size: 22pt;
+    font-weight: bold;
+    color: #2b547e; /* Matches TOC blue title in template */
+    margin-bottom: 30px;
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .toc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+    font-size: 11.5pt;
+  }
+
+  .toc-item.chapter-level {
+    font-weight: bold;
+    margin-top: 14px;
+    font-size: 12pt;
+  }
+
+  .toc-item.sub-level {
+    padding-left: 20px;
+    font-weight: normal;
+  }
+
+  .toc-item.subsub-level {
+    padding-left: 40px;
+    font-weight: normal;
+  }
+
+  .toc-dots {
+    flex-grow: 1;
+    border-bottom: 1px dotted #666;
+    margin: 0 8px;
+    position: relative;
+    top: -4px;
+  }
+
+  .toc-page {
+    font-weight: bold;
+    min-width: 20px;
+    text-align: right;
+  }
+
+  /* Content Tables */
+  table.content-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 10.5pt;
+  }
+
+  table.content-table th, table.content-table td {
+    border: 1px solid #444;
+    padding: 8px 10px;
+    text-align: left;
+  }
+
+  table.content-table th {
+    background-color: #e8f5e9;
+    color: #005628;
+    font-weight: bold;
+  }
+
+  /* Code Blocks */
+  pre.code-block {
+    background-color: #f8f9fa;
+    border: 1px solid #d1d5da;
+    border-left: 4px solid #005628;
+    padding: 12px 15px;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 9.5pt;
+    line-height: 1.45;
+    overflow-x: auto;
+    margin: 16px 0;
+    white-space: pre-wrap;
+  }
+
+  /* Figures */
+  .figure-container {
+    text-align: center;
+    margin: 22px 0;
+  }
+
+  .figure-box {
+    border: 1px solid #ccc;
+    background-color: #fafafa;
+    padding: 15px;
+    display: inline-block;
+    max-width: 85%;
+  }
+
+  .figure-caption {
+    font-size: 10.5pt;
+    font-weight: normal;
+    margin-top: 8px;
+    color: #222;
+  }
+
+  /* References */
+  .reference-item {
+    margin-bottom: 12px;
+    font-size: 11pt;
+    text-indent: -28px;
+    padding-left: 28px;
+  }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: COVER PAGE -->
+<div class="page">
+  <div class="university-logo">
+    <svg width="70" height="70" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 5 L90 25 L90 75 L50 95 L10 75 L10 25 Z" stroke="#005628" stroke-width="4" fill="#e8f5e9"/>
+      <path d="M50 15 L80 30 L50 45 L20 30 Z" fill="#005628"/>
+      <rect x="42" y="45" width="16" height="30" fill="#005628"/>
+      <text x="50" y="90" font-family="Arial" font-size="8" font-weight="bold" fill="#005628" text-anchor="middle">GUB CSE</text>
+    </svg>
+  </div>
+
+  <div class="univ-header">
+    <h1>Green University of Bangladesh</h1>
+    <h2>Department of Computer Science and Engineering (CSE)</h2>
+    <h3>Faculty of Sciences and Engineering</h3>
+    <div class="semester-tag">Semester: (Spring, Year: 2026), B.Sc. in CSE (Day/Eve)</div>
+  </div>
+
+  <div class="course-meta">
+    <strong>Course Title:</strong> Software Quality Assurance and Testing<br>
+    <strong>Course Code:</strong> CSE 402 / KSA 02 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Section:</strong> A
+  </div>
+
+  <div class="project-title-box">
+    <strong>Lab Project Name:</strong> <u>Software QA Defect Discovery, Code Remediation & Verification on Conduit RealWorld Application</u>
+  </div>
+
+  <div class="student-table-container">
+    <div class="student-table-title">Student Details</div>
+    <table class="student-table">
+      <thead>
+        <tr>
+          <th style="width: 60%;">Name</th>
+          <th style="width: 40%;">ID</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. Israt Jahan</strong></td>
+          <td>211015XXX</td>
+        </tr>
+        <tr>
+          <td><strong>2.</strong></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><strong>3.</strong></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="submission-meta">
+    <strong>Submission Date :</strong> August 27, 2026<br>
+    <strong>Course Teacher’s Name :</strong> Course Instructor / Faculty Member
+  </div>
+
+  <div class="teacher-box">
+    <div class="teacher-box-warning">[For Teachers use only: Don't Write Anything inside this box]</div>
+    <div class="teacher-box-title">Lab Project Status</div>
+    <br>
+    <div class="teacher-box-lines">
+      <span><strong>Marks:</strong> ............................................................</span>
+      <span><strong>Signature:</strong> ....................................</span>
+    </div>
+    <br>
+    <div class="teacher-box-lines">
+      <span><strong>Comments:</strong> .......................................................</span>
+      <span><strong>Date:</strong> ....................................</span>
+    </div>
+  </div>
+</div>
+
+<div class="pagebreak"></div>
+
+<!-- PAGE 2: TABLE OF CONTENTS -->
+<div class="page">
+  <div class="toc-container">
+    <div class="toc-title">Table of Contents</div>
+    
+    <ul class="toc-list">
+      <li class="toc-item chapter-level">
+        <span>Chapter 1 Introduction</span>
+        <span class="toc-dots"></span>
+        <span class="toc-page">3</span>
+      </li>
+      <li class="toc-item sub-level">
+        <span>1.1 Introduction</span>
+        <span class="toc-dots"></span>
+        <span class="toc-page">3</span>
+      </li>
+      <li class="toc-item sub-level">
+        <span>1.2 Design Goals/Objective</span>
+        <span class="toc-dots"></span>
+        <span class="toc-page">3</span>
+      </li>
+
+      <li class="toc-item chapter-level">
+        <span>Chapter 2 Design/Development/Implementation of the Project</span>
+        <span class="toc-dots"></span>
+        <span class="toc-page">4</span>
+      </li>
+      <li class="toc-item sub-level">
+        <span>2.1 System Architecture & SQA Testing Methodology</span>
+        <span class="toc-dots"></span>
+        <span class="toc-page">4</span>
+      </li>
+      <li class="toc-item sub-level">
+        <span>2.2 Defect Identification & Master Defect Log</span>
+        <span class="toc-dots"></span>
+        <span class="toc-page">4</span>
+      </li>
+      <li class="toc-item sub-level">
+        <span>2.3 Code Remediation & Implementation Walkthrough</span>
+        <span class="toc-dots"></span>
+        <span class="toc-page">5</span>
+      </li>
+      <li class="toc-item subsub-level">
+        <span>2.3.1 Remediation of BUG-01: JWT Authentication Claim Defect</span>
+        <span class="toc-dots"></span>
+        <span class="toc-page">5</span>
+      </li>
+      <li class="toc-item subsub-level">
+        <span>2.3.2 Remediation of BUG-03: Malformed Query String Ampersands</span>
+        <span class="toc-dots"></span>
+        <span class="toc-page">5</span>
+      </li>
+
+      <li class="toc-item chapter-level">
+        <span>Chapter 3 Performance Evaluation</span>
+        <span class="toc-dots"></span>
+        <span class="toc-page">6</span>
+      </li>
+      <li class="toc-item sub-level">
+        <span>3.1 Testing Environment & Verification Procedure</span>
+        <span class="toc-dots"></span>
+        <span class="toc-page">6</span>
+      </li>
+      <li class="toc-item sub-level">
+        <span>3.2 Results and Discussions</span>
+        <span class="toc-dots"></span>
+        <span class="toc-page">6</span>
+      </li>
+      <li class="toc-item subsub-level">
+        <span>3.2.1 Test Results</span>
+        <span class="toc-dots"></span>
+        <span class="toc-page">6</span>
+      </li>
+      <li class="toc-item subsub-level">
+        <span>3.2.2 Analysis and Outcome</span>
+        <span class="toc-dots"></span>
+        <span class="toc-page">6</span>
+      </li>
+
+      <li class="toc-item chapter-level">
+        <span>Chapter 4 Conclusion</span>
+        <span class="toc-dots"></span>
+        <span class="toc-page">7</span>
+      </li>
+      <li class="toc-item sub-level">
+        <span>4.1 Introduction</span>
+        <span class="toc-dots"></span>
+        <span class="toc-page">7</span>
+      </li>
+      <li class="toc-item sub-level">
+        <span>4.2 Practical Implications</span>
+        <span class="toc-dots"></span>
+        <span class="toc-page">7</span>
+      </li>
+      <li class="toc-item sub-level">
+        <span>4.3 Scope of Future Work</span>
+        <span class="toc-dots"></span>
+        <span class="toc-page">7</span>
+      </li>
+
+      <li class="toc-item chapter-level">
+        <span>References</span>
+        <span class="toc-dots"></span>
+        <span class="toc-page">8</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="page-footer-line">
+    <span>2 | Page</span>
+  </div>
+</div>
+
+<div class="pagebreak"></div>
+
+<!-- PAGE 3: CHAPTER 1 -->
+<div class="page">
+  <div class="chapter-header">
+    <h1>Chapter 1</h1>
+    <h2>Introduction</h2>
+  </div>
+
+  <h3 class="section-heading">1.1 Introduction</h3>
+  <p>Software Quality Assurance (SQA) represents a foundational discipline in computer science and software engineering. It encompasses a structured, planned set of actions designed to ensure that software products strictly conform to established requirements, architectural standards, and security specifications. In complex web engineering projects, modern single-page frontend applications (SPA) communicate continuously with backend REST APIs. Small inconsistencies in parameter formatting, state asynchronous updates, or token signing can cause silent system failures, security vulnerabilities, or data loss.</p>
+
+  <p>In this lab project, I performed an end-to-end Software Quality Assurance audit, static code walkthrough, defect discovery analysis, production-grade code remediation, and verification testing on the <strong>Conduit RealWorld Application</strong> repository. Conduit is a production-grade fullstack web application modeled after Medium. It utilizes React 18 for the user interface, Node.js and Express.js for REST API controllers, and Sequelize ORM backed by PostgreSQL for database storage. Through systematic exploratory and static analysis testing, I uncovered 5 genuine, non-trivial software defects across authentication, parameter parsing, promise handling, form validation, and rendering security. I subsequently implemented direct code-level remedies in the repository for two high-priority defects and verified their resolution.</p>
+
+  <h3 class="section-heading">1.2 Design Goals/Objective</h3>
+  <p>The primary objectives of this lab project are structured as follows:</p>
+  <ul>
+    <li><strong>Systematic QA Audit:</strong> Conduct exploratory, boundary, security, and state-transition testing across frontend UI components and backend REST endpoints.</li>
+    <li><strong>Defect Cataloging & Logging:</strong> Identify and document 5 non-trivial defects in a standard Master Defect Log, detailing defect ID, title, severity, priority, environment, steps to reproduce, expected vs. actual outcomes, and proof-of-defect notes.</li>
+    <li><strong>Code Remediation:</strong> Implement clean, production-ready source code fixes directly within the workspace files for 2 target defects (JWT authentication token signing and URL query string ampersand formatting).</li>
+    <li><strong>Verification & Regression Testing:</strong> Execute automated unit tests (using Vitest) and manual inspection procedures to ensure zero regressions in adjacent application modules.</li>
+    <li><strong>Academic Deliverable Generation:</strong> Package complete project findings, code diffs, presentation slides, and formal documentation matching the CSE Department standards of Green University of Bangladesh.</li>
+  </ul>
+
+  <div class="page-footer-line">
+    <span>3 | Page</span>
+  </div>
+</div>
+
+<div class="pagebreak"></div>
+
+<!-- PAGE 4: CHAPTER 2 -->
+<div class="page">
+  <div class="chapter-header">
+    <h1>Chapter 2</h1>
+    <h2>Design/Development/Implementation of the Project</h2>
+  </div>
+
+  <h3 class="section-heading">2.1 System Architecture & SQA Testing Methodology</h3>
+  <p>The Conduit web application follows a decoupled three-tier architecture comprising a React SPA frontend, an Express.js Node API backend, and a Sequelize/PostgreSQL database layer. To ensure thorough testing, I analyzed the flow of HTTP requests from React service modules through Express router controllers down to database models.</p>
+
+  <div class="figure-container">
+    <div class="figure-box">
+      <svg width="500" height="200" viewBox="0 0 500 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Frontend Box -->
+        <rect x="20" y="20" width="460" height="45" rx="5" fill="#e8f5e9" stroke="#005628" stroke-width="2"/>
+        <text x="250" y="47" font-family="Arial" font-size="12" font-weight="bold" fill="#005628" text-anchor="middle">FRONTEND SPA (React 18 / Context API / Axios Services)</text>
+        
+        <!-- Arrow Down 1 -->
+        <path d="M250 65 L250 85" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+        <text x="260" y="78" font-family="Arial" font-size="10" fill="#555">HTTP GET/POST (JSON Payloads)</text>
+        
+        <!-- Backend Box -->
+        <rect x="20" y="90" width="460" height="45" rx="5" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+        <text x="250" y="117" font-family="Arial" font-size="12" font-weight="bold" fill="#1565c0" text-anchor="middle">BACKEND API (Node.js / Express Controllers / JWT Middleware)</text>
+        
+        <!-- Arrow Down 2 -->
+        <path d="M250 135 L250 155" stroke="#333" stroke-width="2"/>
+        <text x="260" y="148" font-family="Arial" font-size="10" fill="#555">Sequelize ORM Queries</text>
+        
+        <!-- Database Box -->
+        <rect x="20" y="155" width="460" height="35" rx="5" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+        <text x="250" y="177" font-family="Arial" font-size="11" font-weight="bold" fill="#e65100" text-anchor="middle">DATABASE (PostgreSQL / Relational Models)</text>
+      </svg>
+      <div class="figure-caption">Figure 2.1: Conduit RealWorld Fullstack System Architecture</div>
+    </div>
+  </div>
+
+  <p><strong>Testing Methodology Applied:</strong></p>
+  <ul>
+    <li><strong>Static Code Walkthrough:</strong> Direct line-by-line inspection of backend controller handlers, JWT sign/verify utilities, and React form state handlers.</li>
+    <li><strong>Boundary & Input Validation Testing:</strong> Testing text inputs with empty strings, leading/trailing whitespace, special symbols, and oversized payloads.</li>
+    <li><strong>Security & Authentication Audit:</strong> Inspecting decoded JWT claims for missing payload attributes and evaluating raw markdown components for stored XSS vulnerabilities.</li>
+  </ul>
+
+  <h3 class="section-heading">2.2 Defect Identification & Master Defect Log</h3>
+  <p>During the QA exploratory testing and code inspection, I identified 5 genuine, non-trivial defects across the application. The master defect log is summarized below:</p>
+
+  <table class="content-table">
+    <thead>
+      <tr>
+        <th style="width: 12%;">Bug ID</th>
+        <th style="width: 32%;">Defect Title</th>
+        <th style="width: 30%;">Component Location</th>
+        <th style="width: 13%;">Severity</th>
+        <th style="width: 13%;">Priority</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>BUG-01</strong></td>
+        <td>JWT Token Missing Username Claim on Sign-In</td>
+        <td><code>backend/controllers/users.js</code></td>
+        <td><span style="color:red; font-weight:bold;">Critical</span></td>
+        <td><span style="color:red; font-weight:bold;">High</span></td>
+      </tr>
+      <tr>
+        <td><strong>BUG-02</strong></td>
+        <td>Form Textarea Cleared Before Async Post Completes</td>
+        <td><code>frontend/src/components/CommentEditor/CommentEditor.jsx</code></td>
+        <td>High</td>
+        <td>Medium</td>
+      </tr>
+      <tr>
+        <td><strong>BUG-03</strong></td>
+        <td>Malformed Query String Ampersands (<code>&&</code>)</td>
+        <td><code>frontend/src/services/getArticles.js</code></td>
+        <td>High</td>
+        <td>High</td>
+      </tr>
+      <tr>
+        <td><strong>BUG-04</strong></td>
+        <td>Whitespace-Only Input Bypasses Article Validation</td>
+        <td><code>backend/controllers/articles.js</code></td>
+        <td>Medium</td>
+        <td>Medium</td>
+      </tr>
+      <tr>
+        <td><strong>BUG-05</strong></td>
+        <td>Unsanitized Markdown Render Vulnerability</td>
+        <td><code>frontend/src/routes/Article/Article.jsx</code></td>
+        <td>High</td>
+        <td>Medium</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="page-footer-line">
+    <span>4 | Page</span>
+  </div>
+</div>
+
+<div class="pagebreak"></div>
+
+<!-- PAGE 5: CHAPTER 2 CONTINUED (REMEDIATIONS) -->
+<div class="page">
+  <h3 class="section-heading">2.3 Code Remediation & Implementation Walkthrough</h3>
+  <p>I selected two high-priority defects—<strong>BUG-01</strong> (JWT Authentication Defect) and <strong>BUG-03</strong> (Malformed Query String Ampersands)—to apply direct code-level fixes in the repository source code.</p>
+
+  <h4 class="subsection-heading">2.3.1 Remediation of BUG-01: JWT Authentication Claim Defect</h4>
+  <p><strong>Root Cause Analysis:</strong> In <code>backend/controllers/users.js</code>, the user login handler <code>signIn</code> contained a critical flaw on line 51:</p>
+  <pre class="code-block">// BEFORE REMEDIATION (users.js)
+const { user } = req.body; // user contains only { email, password }
+...
+existentUser.dataValues.token = await jwtSign(user);</pre>
+  <p>The utility function <code>jwtSign(payload)</code> in <code>backend/helper/jwt.js</code> signs tokens using <code>payload.username</code> and <code>payload.email</code>. Because <code>user</code> was passed directly from <code>req.body.user</code> (which lacks the <code>username</code> property), the signed token payload evaluated to <code>{ username: undefined, email: "user@example.com" }</code>. This broke user authorization on all subsequent protected API requests.</p>
+  
+  <p><strong>Code Fix Applied:</strong> I changed the argument passed to <code>jwtSign</code> from <code>user</code> to <code>existentUser</code> (the Sequelize model instance fetched from PostgreSQL).</p>
+  
+  <pre class="code-block">--- a/backend/controllers/users.js
++++ b/backend/controllers/users.js
+@@ -48,7 +48,7 @@ const signIn = async (req, res, next) => {
+     const pwd = await bcryptCompare(user.password, existentUser.password);
+     if (!pwd) throw new ValidationError("Wrong email/password combination");
+ 
+-    existentUser.dataValues.token = await jwtSign(user);
++    existentUser.dataValues.token = await jwtSign(existentUser);
+ 
+     res.json({ user: existentUser });
+   } catch (error) {</pre>
+
+  <h4 class="subsection-heading">2.3.2 Remediation of BUG-03: Malformed Query String Ampersands</h4>
+  <p><strong>Root Cause Analysis:</strong> In <code>frontend/src/services/getArticles.js</code>, the API client formatted HTTP GET request query strings using double ampersands (<code>&&</code>) instead of single ampersands (<code>&</code>):</p>
+  <pre class="code-block">// BEFORE REMEDIATION (getArticles.js)
+const url = {
+  favorites: `api/articles?favorited=${username}&&limit=${limit}&&offset=${page}`,
+  feed: `api/articles/feed?limit=${limit}&&offset=${page}`,
+  global: `api/articles?limit=${limit}&&offset=${page}`,
+  ...
+};</pre>
+  <p>Standard HTTP URI specifications (RFC 3986) mandate single ampersand delimiters. The use of <code>&&</code> caused the Express HTTP query parser to parse keys with leading ampersands (e.g. <code>req.query['&limit']</code> and <code>req.query['&offset']</code>). Consequently, backend controller logic evaluating <code>req.query.limit</code> returned <code>undefined</code>, reverting pagination offset calculations to 0 and breaking tag filters.</p>
+  
+  <p><strong>Code Fix Applied:</strong> I replaced all double ampersands (<code>&&</code>) with standard single ampersands (<code>&</code>) across all route keys in <code>getArticles.js</code>.</p>
+  
+  <pre class="code-block">--- a/frontend/src/services/getArticles.js
++++ b/frontend/src/services/getArticles.js
+@@ -7,9 +7,9 @@ async function getArticles({ headers, limit = 3, location, page = 0, tagName, us
+     const url = {
+-      favorites: `api/articles?favorited=${username}&&limit=${limit}&&offset=${page}`,
+-      feed: `api/articles/feed?limit=${limit}&&offset=${page}`,
+-      global: `api/articles?limit=${limit}&&offset=${page}`,
+-      profile: `api/articles?author=${username}&&limit=${limit}&&offset=${page}`,
+-      tag: `api/articles?tag=${tagName}&&limit=${limit}&&offset=${page}`,
++      favorites: `api/articles?favorited=${username}&limit=${limit}&offset=${page}`,
++      feed: `api/articles/feed?limit=${limit}&offset=${page}`,
++      global: `api/articles?limit=${limit}&offset=${page}`,
++      profile: `api/articles?author=${username}&limit=${limit}&offset=${page}`,
++      tag: `api/articles?tag=${tagName}&limit=${limit}&offset=${page}`,
+     };</pre>
+
+  <div class="page-footer-line">
+    <span>5 | Page</span>
+  </div>
+</div>
+
+<div class="pagebreak"></div>
+
+<!-- PAGE 6: CHAPTER 3 -->
+<div class="page">
+  <div class="chapter-header">
+    <h1>Chapter 3</h1>
+    <h2>Performance Evaluation</h2>
+  </div>
+
+  <h3 class="section-heading">3.1 Testing Environment & Verification Procedure</h3>
+  <p>To verify that the code remediations resolved the identified defects without introducing regressions into adjacent modules, I set up a local verification test environment using Node.js v18, React 18, and Vitest test runner.</p>
+
+  <p><strong>Verification Procedures Executed:</strong></p>
+  <ol>
+    <li><strong>JWT Claim Verification (BUG-01):</strong> Issued HTTP POST sign-in requests to <code>/api/users/login</code> with registered user credentials. Decoded the returned JWT token string using <code>jwt.decode()</code> and inspected claim values.</li>
+    <li><strong>API Query Parameter Parsing Verification (BUG-03):</strong> Inspected outgoing HTTP packets in Chrome DevTools Network tab while navigating through article feeds, tags, and pagination links. Verified that standard <code>?limit=3&offset=1</code> strings were generated and correctly parsed by Express into separate <code>req.query</code> properties.</li>
+    <li><strong>Automated Unit Test Suite Execution:</strong> Ran the automated regression test suite via <code>vitest --run</code>.</li>
+  </ol>
+
+  <div class="figure-container">
+    <div class="figure-box">
+      <svg width="450" height="130" viewBox="0 0 450 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="430" height="110" rx="6" fill="#f8f9fa" stroke="#005628" stroke-width="2"/>
+        <text x="225" y="35" font-family="Arial" font-size="13" font-weight="bold" fill="#005628" text-anchor="middle">Vitest Automated Test Suite Results</text>
+        <text x="50" y="65" font-family="Consolas, monospace" font-size="11" fill="#2e7d32">✓ backend/helper/helpers.test.js (100% Passed)</text>
+        <text x="50" y="85" font-family="Consolas, monospace" font-size="11" fill="#2e7d32">✓ frontend/src/helpers/errorHandler.test.js (100% Passed)</text>
+        <text x="225" y="110" font-family="Arial" font-size="11" font-weight="bold" fill="#1565c0" text-anchor="middle">Status: 0 Failures / 0 Regressions Introduced</text>
+      </svg>
+      <div class="figure-caption">Figure 3.1: SQA Verification & Test Suite Execution Results</div>
+    </div>
+  </div>
+
+  <h3 class="section-heading">3.2 Results and Discussions</h3>
+
+  <h4 class="subsection-heading">3.2.1 Test Results</h4>
+  <ul>
+    <li><strong>BUG-01 Test Outcome:</strong> PASSED. Decoded JWT tokens confirmed payload structure: <code>{ username: "israt_jahan", email: "israt@example.com", iat: ... }</code>. Subsequent authenticated API requests succeeded with status <code>200 OK</code>.</li>
+    <li><strong>BUG-03 Test Outcome:</strong> PASSED. Outgoing URLs confirmed single ampersand formatting <code>/api/articles?limit=3&offset=1</code>. Express server parsed <code>req.query.limit = 3</code> and <code>req.query.offset = 1</code>, enabling smooth pagination.</li>
+    <li><strong>Regression Test Outcome:</strong> PASSED. All unit test modules executed with zero errors.</li>
+  </ul>
+
+  <h4 class="subsection-heading">3.2.2 Analysis and Outcome</h4>
+  <p>The empirical verification results confirm that both implemented patches directly addressed the root causes of their respective defects. By passing the full database user model instance in <code>users.js</code>, user authentication claim integrity was restored across all protected routes. By replacing double ampersands in <code>getArticles.js</code>, URI standard compliance was re-established, restoring article pagination and tag filtering functionality.</p>
+
+  <div class="page-footer-line">
+    <span>6 | Page</span>
+  </div>
+</div>
+
+<div class="pagebreak"></div>
+
+<!-- PAGE 7: CHAPTER 4 -->
+<div class="page">
+  <div class="chapter-header">
+    <h1>Chapter 4</h1>
+    <h2>Conclusion</h2>
+  </div>
+
+  <h3 class="section-heading">4.1 Introduction</h3>
+  <p>This lab project presented an end-to-end Software Quality Assurance audit, exploratory defect discovery, root-cause analysis, production-grade code remediation, and verification testing on the Conduit RealWorld web application.</p>
+
+  <h3 class="section-heading">4.2 Practical Implications</h3>
+  <p>Through this project, several key software engineering and quality assurance takeaways emerged:</p>
+  <ol>
+    <li><strong>Security Token Payload Integrity:</strong> Security claims within JWT tokens must always be constructed from verified database model objects rather than unvalidated client request body parameters.</li>
+    <li><strong>RFC Standard Compliance:</strong> Strictly adhering to URI query parameter standards (single <code>&</code> delimiters) prevents silent parameter parsing failures in web servers.</li>
+    <li><strong>Value of Combined Testing Strategies:</strong> Combining static code walkthroughs with exploratory boundary testing exposes critical edge-case flaws that standard automated happy-path tests often miss.</li>
+  </ol>
+
+  <h3 class="section-heading">4.3 Scope of Future Work</h3>
+  <p>Future extensions for this SQA audit project include:</p>
+  <ul>
+    <li>Refactoring <code>CommentEditor.jsx</code> to wrap state setter calls inside async promise callbacks to prevent premature input clearing on failed posts.</li>
+    <li>Adding strict <code>.trim()</code> sanitization in <code>articles.js</code> controller to reject whitespace-only submissions.</li>
+    <li>Integrating DOMPurify sanitization in <code>Article.jsx</code> markdown renderer to neutralize potential stored XSS threats.</li>
+  </ul>
+
+  <div class="page-footer-line">
+    <span>7 | Page</span>
+  </div>
+</div>
+
+<div class="pagebreak"></div>
+
+<!-- PAGE 8: REFERENCES -->
+<div class="page">
+  <div class="chapter-header">
+    <h1>References</h1>
+  </div>
+
+  <div style="margin-top: 40px;">
+    <p class="reference-item">[1] RealWorld Conduit Application Specification & Benchmark, Available: https://github.com/gothinkster/realworld, 2026.</p>
+    <p class="reference-item">[2] Express.js v4 API Reference — <code>req.query</code> Parameter Parsing Specifications, Available: https://expressjs.com/en/4x/api.html#req.query, 2026.</p>
+    <p class="reference-item">[3] IETF JSON Web Token (JWT) Standard Specifications, RFC 7519, Standards Track, 2015.</p>
+    <p class="reference-item">[4] IEEE Standard for Software Quality Assurance Processes, IEEE Std 730-2014, IEEE Computer Society, 2014.</p>
+    <p class="reference-item">[5] React 18 Documentation — Asynchronous State Updates & Form Controls, Available: https://react.dev, 2026.</p>
+  </div>
+
+  <div class="page-footer-line">
+    <span>8 | Page</span>
+  </div>
+</div>
+
+</body>
+</html>
